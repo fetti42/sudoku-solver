@@ -1,19 +1,23 @@
 #include <iostream>
 #include <vector>
 
+int SUDOKU_SIZE = 9;
+
 class Cell{
-  std::vector<int> values;
+  std::vector<bool> possible;
+  int value;
   int id;
   int x_coord;
   int y_coord;
   bool done;
 
 public:
-  void set_values(int init_value);
+  void initialize(int init_value);
   bool is_done();
-  std::vector<int> return_possible();
-  int return_value();
+  std::vector<bool> get_possible();
+  int get_value();
   void remove_value(int bad_value);
+  void update();
   
 };
 

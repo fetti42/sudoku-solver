@@ -9,6 +9,11 @@ class Cell{
   bool done;
 
 public:
+  void set_values(int init_value);
+  bool is_done();
+  std::vector<int> return_possible();
+  int return_value();
+  void remove_value(int bad_value);
   
 };
 

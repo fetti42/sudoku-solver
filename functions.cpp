@@ -3,6 +3,8 @@
 #include <cmath>
 #include "functions.hpp"
 
+int SUDOKU_SIZE = 4;
+
 //Cell functions
 
 void Cell::initialize(int init_value) {
@@ -29,7 +31,7 @@ bool Cell::is_done() {
   return(done);
 }
 
-std::vector<int> Cell::get_possible() {
+std::vector<bool> Cell::get_possible() {
   return(possible);
 }
 
@@ -70,7 +72,7 @@ void Cell::update() {
 //Sudoku functions
 
 void Sudoku::load_sudoku(std::vector<int> data){
-  if(sqrt(data.size) != SUDOKU_SIZE) {
+  if(sqrt(data.size()) != SUDOKU_SIZE) {
     std::cout << "Size mismatch\n";
   }
   for(int i=0;i<data.size();i++) {
@@ -87,4 +89,5 @@ void Sudoku::print_sudoku(){
     if(i%SUDOKU_SIZE == SUDOKU_SIZE-1) {
       std::cout << "\n";
     }
+  }
 }

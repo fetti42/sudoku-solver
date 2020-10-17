@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 
-int SUDOKU_SIZE = 9;
-
 class Cell{
   std::vector<bool> possible;
   int value;
@@ -39,4 +37,4 @@ public:
   void load_sudoku(std::vector<int> data);
 
   void print_sudoku();
-}
+};

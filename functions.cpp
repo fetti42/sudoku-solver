@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <cmath>
 #include "functions.hpp"
 
 //Cell functions
@@ -28,11 +29,11 @@ bool Cell::is_done() {
   return(done);
 }
 
-std::vector<int> Cell::return_possible() {
+std::vector<int> Cell::get_possible() {
   return(possible);
 }
 
-int Cell::return_value() {
+int Cell::get_value() {
   if(!done) {
     return(0);
   }
@@ -69,7 +70,21 @@ void Cell::update() {
 //Sudoku functions
 
 void Sudoku::load_sudoku(std::vector<int> data){
+  if(sqrt(data.size) != SUDOKU_SIZE) {
+    std::cout << "Size mismatch\n";
+  }
+  for(int i=0;i<data.size();i++) {
+    Cell foo;
+    foo.initialize(data[i]);
+    cells.push_back(foo);
+  }
+  
 }
 
 void Sudoku::print_sudoku(){
+  for(int i=0;i<cells.size();i++) {
+    std::cout << cells[i].get_value() << " ";
+    if(i%SUDOKU_SIZE == SUDOKU_SIZE-1) {
+      std::cout << "\n";
+    }
 }

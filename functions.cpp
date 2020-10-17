@@ -66,6 +66,10 @@ void Cell::update() {
   
 }
 
+int Cell::get_id() {
+  return(id);
+}
+
 //Group functions
 
 
@@ -78,6 +82,7 @@ void Sudoku::load_sudoku(std::vector<int> data){
   for(int i=0;i<data.size();i++) {
     Cell foo;
     foo.initialize(data[i]);
+    foo.id = i;
     cells.push_back(foo);
   }
   

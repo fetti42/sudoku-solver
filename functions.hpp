@@ -16,6 +16,7 @@ public:
   int get_value();
   void remove_value(int bad_value);
   void update();
+  int get_id();
   
 };
 

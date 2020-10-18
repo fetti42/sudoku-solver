@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 
+//int SUDOKU_SIZE = 4;
+
 class Cell{
   std::vector<bool> possible;
   int value;
@@ -14,8 +16,9 @@ public:
   bool is_done();
   std::vector<bool> get_possible();
   int get_value();
-  void remove_value(int bad_value);
+  bool remove_value(int bad_value);
   void update();
+  void set_id(int new_id);
   int get_id();
   
 };
@@ -25,8 +28,9 @@ class Group{
 
 public:
   void add_cell(Cell &cell);
-
-  void update();
+  //bool check_for_singles();
+  bool remove_known(); 
+  bool update();
   
 };
 
@@ -36,6 +40,7 @@ class Sudoku{
 
 public:
   void load_sudoku(std::vector<int> data);
-
   void print_sudoku();
+  void make_groups();
+  void solve();
 };

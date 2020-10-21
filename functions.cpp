@@ -5,7 +5,7 @@
 #include <utility>
 #include "functions.hpp"
 
-const int SUDOKU_SIZE = 4;
+const int SUDOKU_SIZE = 9;
 const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
 
 //////////////////
@@ -94,7 +94,7 @@ void Cell::update() {
   if(num_poss == 1) {
     done = true;
     value = last_true;
-    std::cout << "Cell " << id.first << "," << id.second << " value is " << value << "\n";
+    //std::cout << "Cell " << id.first << "," << id.second << " value is " << value << "\n";
   }
   
 }
@@ -210,37 +210,50 @@ void Sudoku::make_groups() {
     groups.push_back(foo);
   }
 
+  std::cout << "Row groups\n";
   //add the row groups
   for(int i=0;i<SUDOKU_SIZE;i++) {
     x_coord = i;
+    std::cout << "Group " << i << "\n";
     for(int j=0;j<SUDOKU_SIZE;j++) {
       y_coord = j;
       std::pair<int,int> cell_id(x_coord, y_coord);
       groups[i].add_cell(get_cell(cell_id));
+      std::cout << cell_id.first << "," << cell_id.second << " ";
     }
+    std::cout << "\n";
   }
+  std::cout << "\n  Column groups\n";
 
   //add the column groups
   for(int i=0;i<SUDOKU_SIZE;i++) {
     y_coord = i;
+    std::cout << "Group " << i << "\n";
     for(int j=0;j<SUDOKU_SIZE;j++) {
       x_coord = j;
       std::pair<int,int> cell_id(x_coord, y_coord);
       groups[i+SUDOKU_SIZE].add_cell(get_cell(cell_id));
+      std::cout << cell_id.first << "," << cell_id.second << " ";
     }
+    std::cout << "\n";
   }
+
+  std::cout << "\n  Square groups \n";
 
   //add the square groups
   for(int i=0;i<SUDOKU_SIZE;i++) {
+    std::cout << "Group " << i << "\n";
     int x_orig = i*SQUARE_SIZE%SUDOKU_SIZE;
-    int y_orig = floor(i/SQUARE_SIZE);
+    int y_orig = floor(i/SQUARE_SIZE)*SQUARE_SIZE;
     
     for(int x_mod=0;x_mod<SQUARE_SIZE;x_mod++) {
       for(int y_mod=0;y_mod<SQUARE_SIZE;y_mod++) {
-	std::pair<int,int> foo(x_orig+x_mod, y_orig+y_mod);
-	groups[i+SUDOKU_SIZE*2].add_cell(get_cell(foo));
+	std::pair<int,int> cell_id(x_orig+x_mod, y_orig+y_mod);
+	groups[i+SUDOKU_SIZE*2].add_cell(get_cell(cell_id));
+	std::cout << cell_id.first << "," << cell_id.second << " ";
       }
     }
+    std::cout << "\n";
   }
 }
 

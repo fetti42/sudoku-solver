@@ -2,41 +2,25 @@
 #include "functions.hpp"
 
 int main() {
-  //Cell cell1;
-  //Cell cell2;
-  /*
-  std::shared_ptr<Cell> cell_ptr1(new Cell());
-  std::shared_ptr<Cell> cell_ptr2(new Cell());
-  
-  cell_ptr1->initialize(0);
-  cell_ptr2->initialize(0);
-
-
-  Group group1;
-  Group group2;
-
-  group1.add_cell(cell_ptr1);
-  group1.add_cell(cell_ptr2);
-  group2.add_cell(cell_ptr1);
-  group2.add_cell(cell_ptr2);
-
-  group1.set_cell_value(0,1);
-
-  std::cout << group1.get_cell_value(0) << "\n";
-  
-  std::cout << group2.get_cell_value(0) << "\n";
-
-  group1.set_test_value(5);
-
-  std::cout << group1.get_test_value() << "\n";
-
-  
-  */
-
   
   //Define the sudoku
   Sudoku foobar;
-  foobar.load_sudoku({1,0,4,0, 2,4,1,0, 3,1,0,0, 0,2,3,0});
+  //testing an easy 9x9 sudoku
+  foobar.load_sudoku({4,0,5, 0,0,0, 0,0,0,
+		      0,0,3, 2,0,9, 1,0,0,
+		      0,2,0, 0,5,1, 0,7,4,
+		      6,7,0, 8,9,0, 5,3,0,
+		      8,3,1, 0,2,0, 0,0,9,
+		      0,0,0, 0,0,0, 8,0,0,
+		      1,5,0, 3,0,2, 4,0,6,
+		      0,9,0, 4,0,5, 0,0,0,
+		      2,8,0, 9,1,0, 7,5,0});
+	
+	
+  /*foobar.load_sudoku({1,0,4,0,
+		      2,4,1,0,
+		      3,1,0,0,
+		      0,2,3,0});*/
   foobar.print_sudoku();
 
   //solve the sudoku

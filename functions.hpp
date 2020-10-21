@@ -1,13 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <utility>
 
 //int SUDOKU_SIZE = 4;
 
 class Cell{
   std::vector<bool> possible;
   int value;
-  int id;
+  std::pair<int, int> id;
   int x_coord;
   int y_coord;
   bool done;
@@ -21,8 +22,8 @@ public:
   void set_value(int new_value);
   bool remove_value(int bad_value);
   void update();
-  void set_id(int new_id);
-  int get_id();
+  void set_id(std::pair<int,int> new_id);
+  std::pair<int,int> get_id();
   
 };
 
@@ -50,6 +51,7 @@ class Sudoku{
 
 public:
   void load_sudoku(std::vector<int> data);
+  std::shared_ptr<Cell>& get_cell(std::pair<int,int> cell_id);
   void print_sudoku();
   void make_groups();
   void solve();

@@ -2,9 +2,11 @@
 #include <iostream>
 #include <cmath>
 #include <memory>
+#include <utility>
 #include "functions.hpp"
 
-int SUDOKU_SIZE = 4;
+const int SUDOKU_SIZE = 4;
+const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
 
 //////////////////
 //Cell functions//
@@ -92,16 +94,16 @@ void Cell::update() {
   if(num_poss == 1) {
     done = true;
     value = last_true;
-    std::cout << "Cell " << id << " value is " << value << "\n";
+    std::cout << "Cell " << id.first << "," << id.second << " value is " << value << "\n";
   }
   
 }
 
-void Cell::set_id(int new_id) {
+void Cell::set_id(std::pair<int, int> new_id) {
   id = new_id;
 }
 
-int Cell::get_id() {
+std::pair<int,int> Cell::get_id() {
   return(id);
 }
 
@@ -174,12 +176,18 @@ void Sudoku::load_sudoku(std::vector<int> data){
   for(int i=0;i<data.size();i++) {
     // Cell foo;
     std::shared_ptr<Cell> p(new Cell());
+    std::pair<int, int> temp_id(floor(i/SUDOKU_SIZE),i%SUDOKU_SIZE); 
     p->initialize(data[i]);
-    p->set_id(i);
+    p->set_id(temp_id);
     cell_ptrs.push_back(p);
   }
   make_groups();
   
+}
+
+
+std::shared_ptr<Cell>& Sudoku::get_cell(std::pair<int,int> cell_id) {
+  return(cell_ptrs[cell_id.first*SUDOKU_SIZE+cell_id.second]);
 }
 
 void Sudoku::print_sudoku(){
@@ -194,68 +202,46 @@ void Sudoku::print_sudoku(){
 
 //make standard sudoku groups
 void Sudoku::make_groups() {
+  int x_coord, y_coord;
+  
   //make empty groups
   for(int i=0;i<SUDOKU_SIZE*3;i++) {
     Group foo;
     groups.push_back(foo);
   }
-  //add cells to groups
-  for(int i=0;i<cell_ptrs.size();i++) {
-    //add to the row group
-    int row_num = floor(i/SUDOKU_SIZE);
-    groups[row_num].add_cell(cell_ptrs[i]);
 
-    //add to the column group
-    int col_num = i%SUDOKU_SIZE;
-    groups[col_num+SUDOKU_SIZE].add_cell(cell_ptrs[i]);
+  //add the row groups
+  for(int i=0;i<SUDOKU_SIZE;i++) {
+    x_coord = i;
+    for(int j=0;j<SUDOKU_SIZE;j++) {
+      y_coord = j;
+      std::pair<int,int> cell_id(x_coord, y_coord);
+      groups[i].add_cell(get_cell(cell_id));
+    }
+  }
 
-    //add to the block group
-    int block_num = 0;
-    //there has got to be a better way to do this
-    //4x4
-    if(i==0||i==1||i==4||i==5) {
-      block_num = 0;
+  //add the column groups
+  for(int i=0;i<SUDOKU_SIZE;i++) {
+    y_coord = i;
+    for(int j=0;j<SUDOKU_SIZE;j++) {
+      x_coord = j;
+      std::pair<int,int> cell_id(x_coord, y_coord);
+      groups[i+SUDOKU_SIZE].add_cell(get_cell(cell_id));
     }
-    if(i==2||i==3||i==6||i==7) {
-      block_num = 1;
+  }
+
+  //add the square groups
+  for(int i=0;i<SUDOKU_SIZE;i++) {
+    int x_orig = i*SQUARE_SIZE%SUDOKU_SIZE;
+    int y_orig = floor(i/SQUARE_SIZE);
+    
+    for(int x_mod=0;x_mod<SQUARE_SIZE;x_mod++) {
+      for(int y_mod=0;y_mod<SQUARE_SIZE;y_mod++) {
+	std::pair<int,int> foo(x_orig+x_mod, y_orig+y_mod);
+	groups[i+SUDOKU_SIZE*2].add_cell(get_cell(foo));
+      }
     }
-    if(i==8||i==9||i==12||i==13) {
-      block_num = 2;
-    }
-    if(i==10||i==11||i==14||i==15) {
-      block_num = 3;
-    }
-    //9x9
-    /*if(i==0||i==1||i==2||i==9||i==10||i==11||i==18||i==19||i==20) {
-      block_num = 0;
-    }
-    if(i==3||i==4||i==5||i==12||i==13||i==14||i==21||i==22||i==23) {
-      block_num = 1;
-    }
-    if(i==6||i==7||i==8||i==15||i==16||i==17||i==24||i==25||i==26) {
-      block_num = 2;
-    }
-    if(i==27||i==28||i==29||i==36||i==37||i==38||i==45||i==46||i==47) {
-      block_num = 3;
-    }
-    if(i==30||i==31||i==32||i==39||i==40||i==41||i==48||i==49||i==50) {
-      block_num = 4;
-    }
-    if(i==33||i==34||i==35||i==42||i==43||i==44||i==51||i==52||i==53) {
-      block_num = 5;
-    }
-    if(i==54||i==55||i==56||i==63||i==64||i==65||i==72||i==73||i==74) {
-      block_num = 6;
-    }
-    if(i==57||i==58||i==59||i==66||i==67||i==68||i==75||i==76||i==77) {
-      block_num = 7;
-    }
-    if(i==60||i==61||i==62||i==69||i==70||i==71||i==78||i==79||i==80) {
-      block_num = 8;
-      }*/
-    groups[block_num+SUDOKU_SIZE*2].add_cell(cell_ptrs[i]);
-  }  
-  
+  }
 }
 
 void Sudoku::solve() {

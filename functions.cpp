@@ -107,9 +107,8 @@ int Cell::get_id() {
 ///////////////////
 //Group functions//
 ///////////////////
-void Group::add_cell(Cell &cell) {
-  std::shared_ptr p = *cell;
-  cell_ptrs.push_back(p);
+void Group::add_cell(const std::shared_ptr<Cell> &cell_ptr) {
+  cell_ptrs.push_back(cell_ptr);
 }
 
 // returns true if any changes were made
@@ -118,17 +117,17 @@ bool Group::remove_known() {
   int known_value;
   //bool cell_change;
   
-  for(int i=0;i<cells.size();i++) {
-    if(!cells[i].is_done()) {
+  for(int i=0;i<cell_ptrs.size();i++) {
+    if(!cell_ptrs[i]->is_done()) {
       continue;
     }
-    known_value = cells[i].get_value();
-    for(int j=0;j<cells.size();j++) {
+    known_value = cell_ptrs[i]->get_value();
+    for(int j=0;j<cell_ptrs.size();j++) {
       //cell_change = false;
       if(i==j) {
 	continue;
       }
-      if(cells[j].remove_value(known_value)) { 
+      if(cell_ptrs[j]->remove_value(known_value)) { 
 	change = true;	
       }
     }
@@ -139,11 +138,11 @@ bool Group::remove_known() {
 }
 
 void Group::set_cell_value(int cell_index, int new_value) {
-  cells[cell_index].set_value(new_value);
+  cell_ptrs[cell_index]->set_value(new_value);
 }
   
 int Group::get_cell_value(int cell_index) {
-  return(cells[cell_index].get_value());
+  return(cell_ptrs[cell_index]->get_value());
 }
 
 bool Group::update() {
@@ -172,18 +171,19 @@ void Sudoku::load_sudoku(std::vector<int> data){
     std::cout << "Size mismatch\n";
   }
   for(int i=0;i<data.size();i++) {
-    Cell foo;
-    foo.initialize(data[i]);
-    foo.set_id(i);
-    cells.push_back(foo);
+    // Cell foo;
+    std::shared_ptr<Cell> p(new Cell());
+    p->initialize(data[i]);
+    p->set_id(i);
+    cell_ptrs.push_back(p);
   }
   make_groups();
   
 }
 
 void Sudoku::print_sudoku(){
-  for(int i=0;i<cells.size();i++) {
-    std::cout << cells[i].get_value() << " ";
+  for(int i=0;i<cell_ptrs.size();i++) {
+    std::cout << cell_ptrs[i]->get_value() << " ";
     if(i%SUDOKU_SIZE == SUDOKU_SIZE-1) {
       std::cout << "\n";
     }
@@ -199,14 +199,14 @@ void Sudoku::make_groups() {
     groups.push_back(foo);
   }
   //add cells to groups
-  for(int i=0;i<cells.size();i++) {
+  for(int i=0;i<cell_ptrs.size();i++) {
     //add to the row group
     int row_num = floor(i/SUDOKU_SIZE);
-    groups[row_num].add_cell(cells[i]);
+    groups[row_num].add_cell(cell_ptrs[i]);
 
     //add to the column group
     int col_num = i%SUDOKU_SIZE;
-    groups[col_num+SUDOKU_SIZE].add_cell(cells[i]);
+    groups[col_num+SUDOKU_SIZE].add_cell(cell_ptrs[i]);
 
     //add to the block group
     int block_num = 0;
@@ -252,7 +252,7 @@ void Sudoku::make_groups() {
     if(i==60||i==61||i==62||i==69||i==70||i==71||i==78||i==79||i==80) {
       block_num = 8;
       }*/
-    groups[block_num+SUDOKU_SIZE*2].add_cell(cells[i]);
+    groups[block_num+SUDOKU_SIZE*2].add_cell(cell_ptrs[i]);
   }  
   
 }

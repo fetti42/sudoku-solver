@@ -2,20 +2,23 @@
 #include "functions.hpp"
 
 int main() {
-  Cell cell1;
-  Cell cell2;
+  //Cell cell1;
+  //Cell cell2;
 
-  cell1.initialize(0);
-  cell2.initialize(0);
+  std::shared_ptr<Cell> cell_ptr1(new Cell());
+  std::shared_ptr<Cell> cell_ptr2(new Cell());
+  
+  cell_ptr1->initialize(0);
+  cell_ptr2->initialize(0);
 
 
   Group group1;
   Group group2;
 
-  group1.add_cell(cell1);
-  group1.add_cell(cell2);
-  group2.add_cell(cell1);
-  group2.add_cell(cell2);
+  group1.add_cell(cell_ptr1);
+  group1.add_cell(cell_ptr2);
+  group2.add_cell(cell_ptr1);
+  group2.add_cell(cell_ptr2);
 
   group1.set_cell_value(0,1);
 

@@ -27,12 +27,12 @@ public:
 };
 
 class Group{
-  std::vector<Cell> cells;
+  std::vector<std::shared_ptr<Cell>> cell_ptrs;
   
   int test_value = 0;
   
 public:
-  void add_cell(Cell &cell);
+  void add_cell(const std::shared_ptr<Cell> &cell_ptr);
   //bool check_for_singles();
   bool remove_known();
   void set_cell_value(int cell_index, int new_value);
@@ -45,7 +45,7 @@ public:
 };
 
 class Sudoku{
-  std::vector<Cell> cells;
+  std::vector<std::shared_ptr<Cell>> cell_ptrs;
   std::vector<Group> groups;
 
 public:

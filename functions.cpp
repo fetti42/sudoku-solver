@@ -329,10 +329,29 @@ void Sudoku::solve() {
 
 void Sudoku::make_sets() {
   //for each value
+  for(int i=0;i<SUDOKU_SIZE;i++) {
+    
+    //for each group
+    for(int j=0;j<groups.size();j++) {
+      // if value is not done in group
+
+      //find set of cells that can contain that value
+    }
+  }
+     
+  
+}
+
+bool Sudoku::check_sets() {
+  bool change = false;
+
+  //for each set
 
   //for each group
 
-  // if value is not done in group
+  //if set is entirely contained in group
 
-  
+  //remove value from other cells in group
+
+  return(change);
 }

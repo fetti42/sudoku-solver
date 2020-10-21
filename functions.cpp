@@ -14,16 +14,18 @@ const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
 
 void Cell::initialize(int init_value) {
 
+  value = init_value-1; // Fix the 1-up/0-up issue
   //error checking would probably be a good idea
   if(init_value != 0) {
     done = true;
-    value = init_value;
+    //value = init_value-1;
     for(int i = 0;i<SUDOKU_SIZE;i++){
       possible.push_back(false);
     }
-    possible[init_value-1] = true;    
+    possible[value] = true;    
   }
   else {
+    //value = -1;
     done = false;
     for(int i = 0;i<SUDOKU_SIZE;i++) {
       possible.push_back(true);
@@ -49,9 +51,10 @@ void Cell::print_possible() {
 
 void Cell::set_value(int new_value) {
   if(done) {
+    //this should be real error checking
     std::cout << "Cell already has a value " << get_value() << ", can't set it to " << new_value << "\n";
   }
-  value = new_value+1;//off by one error
+  value = new_value;//account for off by one error
   done = true;
   for(int i=0;i<SUDOKU_SIZE;i++) {
     if(i!= new_value) {
@@ -64,18 +67,13 @@ void Cell::set_value(int new_value) {
 }
 
 int Cell::get_value() {
-  if(!done) {
-    return(0);
-  }
-  else {
-    return(value);
-  }
+  return(value);
 }
 
 // Returns true if it made a change, false if not
 bool Cell::remove_value(int bad_value) {
-  if(possible[bad_value-1]) {
-    possible[bad_value-1] = false;
+  if(possible[bad_value]) {
+    possible[bad_value] = false;
     update();
     return(true);
   }
@@ -91,7 +89,7 @@ void Cell::update() {
   for(int i=0;i<SUDOKU_SIZE;i++) {
     if(possible[i]) {
       num_poss++;
-      last_true = i+1;
+      last_true = i;
     }
   }
   if(num_poss == 1) {
@@ -174,7 +172,7 @@ bool Group::check_one_poss() {
 bool Group::known_val(int number) {
   bool known = false;
   for(int i=0;i<cell_ptrs.size();i++) {
-    if(cell_ptrs[i]->is_done() && cell_ptrs[i]->get_value()-1 == number) {
+    if(cell_ptrs[i]->is_done() && cell_ptrs[i]->get_value() == number) {
       known = true;
     }
   }
@@ -212,6 +210,17 @@ int Group::get_test_value() {
   return(test_value);
 }
 
+bool Group::val_done(int value) {
+  bool done = false;
+
+  for(int i=0;i<cell_ptrs.size();i++) {
+    if(cell_ptrs[i]->is_done() && cell_ptrs[i]->get_value() == value) {
+      done = true;
+    }
+  }
+  return(done);
+}
+
 ////////////////////
 //Sudoku functions//
 ////////////////////
@@ -239,7 +248,7 @@ std::shared_ptr<Cell>& Sudoku::get_cell(std::pair<int,int> cell_id) {
 
 void Sudoku::print_sudoku(){
   for(int i=0;i<cell_ptrs.size();i++) {
-    std::cout << cell_ptrs[i]->get_value() << " ";
+    std::cout << cell_ptrs[i]->get_value()+1 << " ";
     if(i%SUDOKU_SIZE == SUDOKU_SIZE-1) {
       std::cout << "\n";
     }
@@ -315,4 +324,15 @@ void Sudoku::solve() {
     }
     //print_sudoku();
   }
+}
+
+
+void Sudoku::make_sets() {
+  //for each value
+
+  //for each group
+
+  // if value is not done in group
+
+  
 }

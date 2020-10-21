@@ -44,12 +44,15 @@ public:
 
   void set_test_value(int new_value);
   int get_test_value();
+  bool val_done(int value);
   
 };
 
 class Sudoku{
   std::vector<std::shared_ptr<Cell>> cell_ptrs;
   std::vector<Group> groups;
+  //list of sets; set is pair of value and list of cell ids
+  std::vector<std::pair<int,std::vector<std::pair<int,int>>>> sets;
 
 public:
   void load_sudoku(std::vector<int> data);
@@ -57,4 +60,6 @@ public:
   void print_sudoku();
   void make_groups();
   void solve();
+  void make_sets();
+  bool check_sets();
 };

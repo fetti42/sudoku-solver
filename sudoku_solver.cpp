@@ -4,7 +4,7 @@
 int main() {
   //Cell cell1;
   //Cell cell2;
-
+  /*
   std::shared_ptr<Cell> cell_ptr1(new Cell());
   std::shared_ptr<Cell> cell_ptr2(new Cell());
   
@@ -31,7 +31,7 @@ int main() {
   std::cout << group1.get_test_value() << "\n";
 
   
-
+  */
 
   
   //Define the sudoku

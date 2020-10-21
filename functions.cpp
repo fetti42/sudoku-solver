@@ -19,7 +19,7 @@ void Cell::initialize(int init_value) {
     for(int i = 0;i<SUDOKU_SIZE;i++){
       possible.push_back(false);
     }
-    possible[init_value] = true;    
+    possible[init_value-1] = true;    
   }
   else {
     done = false;
@@ -69,8 +69,8 @@ int Cell::get_value() {
 
 // Returns true if it made a change, false if not
 bool Cell::remove_value(int bad_value) {
-  if(possible[bad_value]) {
-    possible[bad_value] = false;
+  if(possible[bad_value-1]) {
+    possible[bad_value-1] = false;
     update();
     return(true);
   }
@@ -86,12 +86,13 @@ void Cell::update() {
   for(int i=0;i<SUDOKU_SIZE;i++) {
     if(possible[i]) {
       num_poss++;
-      last_true = i;
+      last_true = i+1;
     }
   }
   if(num_poss == 1) {
     done = true;
     value = last_true;
+    std::cout << "Cell " << id << " value is " << value << "\n";
   }
   
 }

@@ -17,6 +17,16 @@ int main() {
   group2.add_cell(cell1);
   group2.add_cell(cell2);
 
+  group1.set_cell_value(0,1);
+
+  std::cout << group1.get_cell_value(0) << "\n";
+  
+  std::cout << group2.get_cell_value(0) << "\n";
+
+  group1.set_test_value(5);
+
+  std::cout << group1.get_test_value() << "\n";
+
   
 
 

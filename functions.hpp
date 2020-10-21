@@ -15,7 +15,9 @@ public:
   void initialize(int init_value);
   bool is_done();
   std::vector<bool> get_possible();
+  void print_possible();
   int get_value();
+  void set_value(int new_value);
   bool remove_value(int bad_value);
   void update();
   void set_id(int new_id);
@@ -25,12 +27,19 @@ public:
 
 class Group{
   std::vector<Cell> cells;
-
+  
+  int test_value = 0;
+  
 public:
   void add_cell(Cell &cell);
   //bool check_for_singles();
-  bool remove_known(); 
+  bool remove_known();
+  void set_cell_value(int cell_index, int new_value);
+  int get_cell_value(int cell_index);
   bool update();
+
+  void set_test_value(int new_value);
+  int get_test_value();
   
 };
 

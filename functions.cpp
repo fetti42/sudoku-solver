@@ -5,7 +5,9 @@
 
 int SUDOKU_SIZE = 4;
 
-//Cell functions
+//////////////////
+//Cell functions//
+//////////////////
 
 void Cell::initialize(int init_value) {
 
@@ -33,6 +35,17 @@ bool Cell::is_done() {
 
 std::vector<bool> Cell::get_possible() {
   return(possible);
+}
+
+void Cell::print_possible() {
+  for(int i=0;i<SUDOKU_SIZE;i++) {
+    std::cout << possible[i] << " ";
+  }
+  std::cout << "\n";
+}
+
+void Cell::set_value(int new_value) {
+  value = new_value;
 }
 
 int Cell::get_value() {
@@ -81,7 +94,9 @@ int Cell::get_id() {
   return(id);
 }
 
-//Group functions
+///////////////////
+//Group functions//
+///////////////////
 void Group::add_cell(Cell &cell) {
   cells.push_back(cell);
 }
@@ -112,6 +127,14 @@ bool Group::remove_known() {
 
 }
 
+void Group::set_cell_value(int cell_index, int new_value) {
+  cells[cell_index].set_value(new_value);
+}
+  
+int Group::get_cell_value(int cell_index) {
+  return(cells[cell_index].get_value());
+}
+
 bool Group::update() {
   //call all the remove_knowns from here?
   bool change;
@@ -121,7 +144,17 @@ bool Group::update() {
   return(change);
 }
 
-//Sudoku functions
+void Group::set_test_value(int new_value) {
+  test_value = new_value;
+}
+
+int Group::get_test_value() {
+  return(test_value);
+}
+
+////////////////////
+//Sudoku functions//
+////////////////////
 
 void Sudoku::load_sudoku(std::vector<int> data){
   if(sqrt(data.size()) != SUDOKU_SIZE) {

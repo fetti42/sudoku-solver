@@ -14,18 +14,16 @@ const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
 
 void Cell::initialize(int init_value) {
 
-  value = init_value-1; // Fix the 1-up/0-up issue
+  value = init_value-1; // Subtract 1 to account for the 1-up/0-up issue
   //error checking would probably be a good idea
   if(init_value != 0) {
     done = true;
-    //value = init_value-1;
     for(int i = 0;i<SUDOKU_SIZE;i++){
       possible.push_back(false);
     }
     possible[value] = true;    
   }
   else {
-    //value = -1;
     done = false;
     for(int i = 0;i<SUDOKU_SIZE;i++) {
       possible.push_back(true);
@@ -34,7 +32,6 @@ void Cell::initialize(int init_value) {
 }
 
 bool Cell::is_done() {
-  //should I call update here?
   return(done);
 }
 
@@ -54,7 +51,7 @@ void Cell::set_value(int new_value) {
     //this should be real error checking
     std::cout << "Cell already has a value " << get_value() << ", can't set it to " << new_value << "\n";
   }
-  value = new_value;//account for off by one error
+  value = new_value;
   done = true;
   for(int i=0;i<SUDOKU_SIZE;i++) {
     if(i!= new_value) {
@@ -95,7 +92,6 @@ void Cell::update() {
   if(num_poss == 1) {
     done = true;
     value = last_true;
-    //std::cout << "Cell " << id.first << "," << id.second << " value is " << value << "\n";
   }
   
 }
@@ -119,7 +115,6 @@ void Group::add_cell(const std::shared_ptr<Cell> &cell_ptr) {
 bool Group::remove_known() {
   bool change = false;
   int known_value;
-  //bool cell_change;
   
   for(int i=0;i<cell_ptrs.size();i++) {
     if(!cell_ptrs[i]->is_done()) {
@@ -127,7 +122,6 @@ bool Group::remove_known() {
     }
     known_value = cell_ptrs[i]->get_value();
     for(int j=0;j<cell_ptrs.size();j++) {
-      //cell_change = false;
       if(i==j) {
 	continue;
       }
@@ -188,7 +182,6 @@ int Group::get_cell_value(int cell_index) {
 }
 
 bool Group::update() {
-  //call all the remove_knowns from here?
   bool change = false;
 
   if(remove_known()) {
@@ -230,7 +223,6 @@ void Sudoku::load_sudoku(std::vector<int> data){
     std::cout << "Size mismatch\n";
   }
   for(int i=0;i<data.size();i++) {
-    // Cell foo;
     std::shared_ptr<Cell> p(new Cell());
     std::pair<int, int> temp_id(floor(i/SUDOKU_SIZE),i%SUDOKU_SIZE); 
     p->initialize(data[i]);
@@ -266,39 +258,29 @@ void Sudoku::make_groups() {
     groups.push_back(foo);
   }
 
-  //std::cout << "Row groups\n";
   //add the row groups
   for(int i=0;i<SUDOKU_SIZE;i++) {
     x_coord = i;
-    //std::cout << "Group " << i << "\n";
     for(int j=0;j<SUDOKU_SIZE;j++) {
       y_coord = j;
       std::pair<int,int> cell_id(x_coord, y_coord);
       groups[i].add_cell(get_cell(cell_id));
-      //std::cout << cell_id.first << "," << cell_id.second << " ";
     }
-    //std::cout << "\n";
   }
-  //std::cout << "\n  Column groups\n";
 
   //add the column groups
   for(int i=0;i<SUDOKU_SIZE;i++) {
     y_coord = i;
-    //std::cout << "Group " << i << "\n";
     for(int j=0;j<SUDOKU_SIZE;j++) {
       x_coord = j;
       std::pair<int,int> cell_id(x_coord, y_coord);
       groups[i+SUDOKU_SIZE].add_cell(get_cell(cell_id));
-      //std::cout << cell_id.first << "," << cell_id.second << " ";
     }
-    //std::cout << "\n";
   }
 
-  //std::cout << "\n  Square groups \n";
 
   //add the square groups
   for(int i=0;i<SUDOKU_SIZE;i++) {
-    //std::cout << "Group " << i << "\n";
     int x_orig = i*SQUARE_SIZE%SUDOKU_SIZE;
     int y_orig = floor(i/SQUARE_SIZE)*SQUARE_SIZE;
     
@@ -306,10 +288,8 @@ void Sudoku::make_groups() {
       for(int y_mod=0;y_mod<SQUARE_SIZE;y_mod++) {
 	std::pair<int,int> cell_id(x_orig+x_mod, y_orig+y_mod);
 	groups[i+SUDOKU_SIZE*2].add_cell(get_cell(cell_id));
-	//std::cout << cell_id.first << "," << cell_id.second << " ";
       }
     }
-    //std::cout << "\n";
   }
 }
 

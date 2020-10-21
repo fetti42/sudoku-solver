@@ -109,7 +109,7 @@ int Cell::get_id() {
 ///////////////////
 void Group::add_cell(Cell &cell) {
   std::shared_ptr p = *cell;
-  cells.push_back(p);
+  cell_ptrs.push_back(p);
 }
 
 // returns true if any changes were made

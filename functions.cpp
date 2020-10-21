@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <memory>
 #include "functions.hpp"
 
 int SUDOKU_SIZE = 4;
@@ -107,7 +108,8 @@ int Cell::get_id() {
 //Group functions//
 ///////////////////
 void Group::add_cell(Cell &cell) {
-  cells.push_back(cell);
+  std::shared_ptr p = *cell;
+  cells.push_back(p);
 }
 
 // returns true if any changes were made

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <memory>
 
 //int SUDOKU_SIZE = 4;
 

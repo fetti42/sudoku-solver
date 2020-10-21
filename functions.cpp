@@ -46,6 +46,15 @@ void Cell::print_possible() {
 
 void Cell::set_value(int new_value) {
   value = new_value;
+  done = true;
+  for(int i=0;i<SUDOKU_SIZE;i++) {
+    if(i!= new_value-1) {
+      possible[i] = false;
+    }
+    else {
+      possible[i] = true;
+    }
+  }
 }
 
 int Cell::get_value() {

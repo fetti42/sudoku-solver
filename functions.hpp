@@ -36,6 +36,8 @@ public:
   void add_cell(const std::shared_ptr<Cell> &cell_ptr);
   //bool check_for_singles();
   bool remove_known();
+  bool check_one_poss();
+  bool known_val(int number);
   void set_cell_value(int cell_index, int new_value);
   int get_cell_value(int cell_index);
   bool update();

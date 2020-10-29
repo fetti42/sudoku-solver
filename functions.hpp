@@ -54,18 +54,14 @@ public:
   int get_cell_value(int cell_index);
   bool update();
   bool check_set(set_struct set);
-
-  /*  void set_test_value(int new_value);
-  int get_test_value();
-  bool val_done(int value);*/
+  bool check_cell_poss(int value, int cell_index);
+  std::pair<int,int> get_cell_id(int cell_index);
   
 };
 
 class Sudoku{
   std::vector<std::shared_ptr<Cell>> cell_ptrs;
   std::vector<Group> groups;
-  //list of sets; set is pair of value and list of cell ids
-  //std::vector<std::pair<int,std::vector<std::pair<int,int>>>> sets;
   std::vector<set_struct> sets;
 
 public:

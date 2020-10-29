@@ -226,6 +226,11 @@ bool Group::check_set(set_struct set) {
   }
 
   else {
+    /*std::cout << "Value " << set.value << ", " << "Found group that entirely contains set ";
+    for(int i=0;i<set.cell_ids.size();i++) {
+      std::cout << set.cell_ids[i].first << "," << set.cell_ids[i].second << "; ";
+    }
+    std::cout << "\n";*/
     // remove the value from all the other cells
     for(int i=0;i<cell_ptrs.size();i++) {
       found = false;
@@ -235,7 +240,7 @@ bool Group::check_set(set_struct set) {
 	  break;
 	}
       }
-      if(found) {
+      if(!found) {
 	if(cell_ptrs[i]->remove_value(set.value)) {
 	  change = true;
 	}
@@ -243,31 +248,19 @@ bool Group::check_set(set_struct set) {
     }
       
   }
-  
-
+  /*if(change){
+    std::cout << "Made a change\n";
+    }*/
   return(change);
 }
 
-/*
-// used for error checking
-void Group::set_test_value(int new_value) {
-  test_value = new_value;
+bool Group::check_cell_poss(int value, int cell_index) {
+  return(cell_ptrs[cell_index]->get_possible()[value]);
 }
 
-int Group::get_test_value() {
-  return(test_value);
+std::pair<int,int> Group::get_cell_id(int cell_index) {
+  return(cell_ptrs[cell_index]->get_id());
 }
-
-bool Group::val_done(int value) {
-  bool done = false;
-
-  for(int i=0;i<cell_ptrs.size();i++) {
-    if(cell_ptrs[i]->is_done() && cell_ptrs[i]->get_value() == value) {
-      done = true;
-    }
-  }
-  return(done);
-  }*/
 
 //////////////////////
 // Sudoku functions //
@@ -363,24 +356,40 @@ void Sudoku::solve() {
 	change = true;
       }
     }
+    make_sets();
+    if(check_sets()) {
+      change = true;
+    }
     //print_sudoku();
   }
 }
 
 // Sets are all the cells within a group that can possibly be a certain value 
 void Sudoku::make_sets() {
+  sets.clear();
+  
   //for each value
+
   for(int i=0;i<SUDOKU_SIZE;i++) {
     
     //for each group
     for(int j=0;j<groups.size();j++) {
       // if value is not done in group
+      if(!groups[j].known_val(i)) {
+	
+	//find set of cells that can contain that value
+	set_struct set;
+	set.value = i;
 
-      //find set of cells that can contain that value
+	for(int k=0;k<SUDOKU_SIZE;k++) {
+	  if(groups[j].check_cell_poss(i,k)) { //checks if i is a possible value for cell k
+	    set.cell_ids.push_back(groups[j].get_cell_id(k)); //gets cell id of cell k
+	  }
+	}
+	sets.push_back(set);
+      }
     }
   }
-     
-  
 }
 
 // For each group, check if any sets are entirely contained within the group.
@@ -390,12 +399,17 @@ bool Sudoku::check_sets() {
   bool change = false;
 
   //for each set
+  for(int i=0;i<sets.size();i++) {
 
   //for each group
+    for(int j=0;j<groups.size();j++) {
 
-  //if set is entirely contained in group
-
-  //remove value from other cells in group
+  //check the group for the set
+      if(groups[j].check_set(sets[i])){
+	change = true;
+      }
+    }
+  }
 
   return(change);
 }

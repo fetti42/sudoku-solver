@@ -13,6 +13,8 @@ const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
 //////////////////
 
 void Cell::initialize(int init_value) {
+  // Initialize cell. If init_value is 1-9, cell value is set.
+  // I init_value is 0, cell value is unknown and all values are possible.
 
   value = init_value-1; // Subtract 1 to account for the 1-up/0-up issue
   //error checking would probably be a good idea
@@ -67,6 +69,7 @@ int Cell::get_value() {
   return(value);
 }
 
+// Remove specified value from possible values.
 // Returns true if it made a change, false if not
 bool Cell::remove_value(int bad_value) {
   if(possible[bad_value]) {
@@ -79,6 +82,7 @@ bool Cell::remove_value(int bad_value) {
   }
 }
 
+// If only one possibility, updates cell value to it
 void Cell::update() {
   int num_poss = 0;
   int last_true = 0;
@@ -112,6 +116,8 @@ void Group::add_cell(const std::shared_ptr<Cell> &cell_ptr) {
 }
 
 // returns true if any changes were made
+// For each cell, if value is known, remove that value
+// from every other cell in group
 bool Group::remove_known() {
   bool change = false;
   int known_value;
@@ -136,6 +142,7 @@ bool Group::remove_known() {
 }
 
 //Checks if there is only one possibility in the group for each value
+// Returns true if change was made, false if not
 bool Group::check_one_poss() {
   bool change = false;
   int num_poss = 0;
@@ -163,6 +170,7 @@ bool Group::check_one_poss() {
   return(change);
 }
 
+// Checks whether a specified value is known in group
 bool Group::known_val(int number) {
   bool known = false;
   for(int i=0;i<cell_ptrs.size();i++) {
@@ -181,6 +189,7 @@ int Group::get_cell_value(int cell_index) {
   return(cell_ptrs[cell_index]->get_value());
 }
 
+// Run the various tests
 bool Group::update() {
   bool change = false;
 
@@ -195,6 +204,8 @@ bool Group::update() {
   return(change);
 }
 
+/*
+// used for error checking
 void Group::set_test_value(int new_value) {
   test_value = new_value;
 }
@@ -212,12 +223,16 @@ bool Group::val_done(int value) {
     }
   }
   return(done);
-}
+  }*/
 
 ////////////////////
 //Sudoku functions//
 ////////////////////
 
+
+// Read in sudoku data and set up cells and groups
+// Values are entered as string of space-separated digits
+// Unknown values should be entered as 0
 void Sudoku::load_sudoku(std::vector<int> data){
   if(sqrt(data.size()) != SUDOKU_SIZE) {
     std::cout << "Size mismatch\n";
@@ -293,6 +308,8 @@ void Sudoku::make_groups() {
   }
 }
 
+
+// As long as there are changes, update all groups
 void Sudoku::solve() {
   bool change = true;
   while(change) {
@@ -306,7 +323,7 @@ void Sudoku::solve() {
   }
 }
 
-
+// Sets are all the cells within a group that can possibly be a certain value 
 void Sudoku::make_sets() {
   //for each value
   for(int i=0;i<SUDOKU_SIZE;i++) {
@@ -322,6 +339,9 @@ void Sudoku::make_sets() {
   
 }
 
+// For each group, check if any sets are entirely contained within the group.
+// If so, all other cells in the group cannot have the set's value.
+// Returns true if any changes were made, false if none.
 bool Sudoku::check_sets() {
   bool change = false;
 

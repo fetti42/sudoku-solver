@@ -5,7 +5,7 @@ int main() {
   
   //Define the sudoku
   Sudoku foobar;
-  //testing an easy 9x9 sudoku
+  //testing an "expert" 9x9 sudoku
   foobar.load_sudoku({8,0,0, 0,1,0, 0,7,0,
 		      0,0,4, 0,5,0, 0,0,2,
 		      0,0,9, 0,0,4, 0,3,0,

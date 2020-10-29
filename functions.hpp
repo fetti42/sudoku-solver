@@ -42,9 +42,9 @@ public:
   int get_cell_value(int cell_index);
   bool update();
 
-  void set_test_value(int new_value);
+  /*  void set_test_value(int new_value);
   int get_test_value();
-  bool val_done(int value);
+  bool val_done(int value);*/
   
 };
 

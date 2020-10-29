@@ -5,16 +5,14 @@
 #include <utility>
 #include "functions.hpp"
 
-const int SUDOKU_SIZE = 9;
-const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
 
-//////////////////
-//Cell functions//
-//////////////////
+////////////////////
+// Cell functions //
+////////////////////
 
 void Cell::initialize(int init_value) {
   // Initialize cell. If init_value is 1-9, cell value is set.
-  // I init_value is 0, cell value is unknown and all values are possible.
+  // If init_value is 0, cell value is unknown and all values are possible.
 
   value = init_value-1; // Subtract 1 to account for the 1-up/0-up issue
   //error checking would probably be a good idea
@@ -108,9 +106,9 @@ std::pair<int,int> Cell::get_id() {
   return(id);
 }
 
-///////////////////
-//Group functions//
-///////////////////
+/////////////////////
+// Group functions //
+/////////////////////
 void Group::add_cell(const std::shared_ptr<Cell> &cell_ptr) {
   cell_ptrs.push_back(cell_ptr);
 }
@@ -204,6 +202,52 @@ bool Group::update() {
   return(change);
 }
 
+bool Group::check_set(set_struct set) {
+  bool change = false;
+  bool found;
+
+  // check if all of the cell ids in the set are in the group
+  for(int i=0;i<set.cell_ids.size();i++) {
+    found = false;
+    std::pair<int,int> id = set.cell_ids[i];
+
+    for(int j=0;j<cell_ptrs.size();j++) {
+      if(id == cell_ptrs[j]->get_id()) {
+	found = true;
+	continue;
+      }
+    }
+    if(!found) {
+      break;
+    }
+  }
+  if(!found) {
+    change = false;
+  }
+
+  else {
+    // remove the value from all the other cells
+    for(int i=0;i<cell_ptrs.size();i++) {
+      found = false;
+      for(int j=0;j<set.cell_ids.size();j++) {
+	if(cell_ptrs[i]->get_id() == set.cell_ids[j]) {
+	  found = true;
+	  break;
+	}
+      }
+      if(found) {
+	if(cell_ptrs[i]->remove_value(set.value)) {
+	  change = true;
+	}
+      }
+    }
+      
+  }
+  
+
+  return(change);
+}
+
 /*
 // used for error checking
 void Group::set_test_value(int new_value) {
@@ -225,9 +269,9 @@ bool Group::val_done(int value) {
   return(done);
   }*/
 
-////////////////////
-//Sudoku functions//
-////////////////////
+//////////////////////
+// Sudoku functions //
+//////////////////////
 
 
 // Read in sudoku data and set up cells and groups

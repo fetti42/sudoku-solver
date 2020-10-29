@@ -1,9 +1,21 @@
+#ifndef SUDOKU_LIBRARY
+#define SUDOKU_LIBRARY
+
 #include <iostream>
 #include <vector>
 #include <memory>
 #include <utility>
+#include <cmath>
 
-//int SUDOKU_SIZE = 4;
+const int SUDOKU_SIZE = 9;
+const int SQUARE_SIZE = sqrt(SUDOKU_SIZE);
+
+
+struct set_struct {
+  int value;
+  std::vector<std::pair<int,int>> cell_ids;
+}; 
+
 
 class Cell{
   std::vector<bool> possible;
@@ -41,6 +53,7 @@ public:
   void set_cell_value(int cell_index, int new_value);
   int get_cell_value(int cell_index);
   bool update();
+  bool check_set(set_struct set);
 
   /*  void set_test_value(int new_value);
   int get_test_value();
@@ -52,7 +65,8 @@ class Sudoku{
   std::vector<std::shared_ptr<Cell>> cell_ptrs;
   std::vector<Group> groups;
   //list of sets; set is pair of value and list of cell ids
-  std::vector<std::pair<int,std::vector<std::pair<int,int>>>> sets;
+  //std::vector<std::pair<int,std::vector<std::pair<int,int>>>> sets;
+  std::vector<set_struct> sets;
 
 public:
   void load_sudoku(std::vector<int> data);
@@ -63,3 +77,6 @@ public:
   void make_sets();
   bool check_sets();
 };
+
+
+#endif
